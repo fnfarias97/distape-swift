@@ -43,6 +43,9 @@ class TracksTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = self.tableView.cellForRow(at: indexPath) as? TrackTableViewCell
+        cell?.parent = self
+        cell?.dummyPlayButton()
         self.performSegue(withIdentifier: "toAudioPlayerVC", sender: self)
     }
 
@@ -102,27 +105,12 @@ class TracksTableViewController: UITableViewController {
 
 extension TracksTableViewController: ButtonOnCellDelegate {
     func buttonTouchedOnCell(myTableViewCell: UITableViewCell) {
-        /* var superview = myTableViewCell.superview
-        while let view = superview, !(view is UITableViewCell) {
-            superview = view.superview
-        }
-        guard let cell = superview as? UITableViewCell else {
-            print("button is not contained in a table view cell")
-            return
-        }
-        guard let indexPath = tableView.indexPath(for: cell) else {
-            print("failed to get index path for cell containing button")
-            return
-        }
-        print(indexPath.row) */
         self.performSegue(withIdentifier: "toAudioPlayerVC", sender: myTableViewCell)
     }
 }
 
 extension TracksTableViewController: PlayButtonDelegate {
     func playButtonTouched(indexPath: IndexPath) {
-        print("touched")
-        // let cell = self.tableView.cellForRowAtIndexPath(indexPath)
         let cell = self.tableView.cellForRow(at: indexPath) as? TrackTableViewCell
         cell?.parent = self
         cell?.dummyPlayButton()
