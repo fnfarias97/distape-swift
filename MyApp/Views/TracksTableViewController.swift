@@ -16,7 +16,8 @@ class TracksTableViewController: UITableViewController {
         RestServiceManager.shared.getInfo(responseType: TrackResponse.self,
                                           method: .get, endpoint: "songs", body: "") { _, data in
                    if let dataResponse = data {
-                       self.tracks = dataResponse.songs ?? []
+                       myTracks = dataResponse.songs ?? []
+                       self.tracks = myTracks
                        self.tableView.reloadData()
                    }
                }
@@ -37,8 +38,9 @@ class TracksTableViewController: UITableViewController {
     }
 
     @objc func updateTable(_ notification: Notification) {
-        tracks.append(Track(title: "asd", artist: "asd", album: "asd", songId: "25",
+        myTracks.append(Track(title: "asd", artist: "asd", album: "asd", songId: "25",
                             genre: .ska, duration: 40, year: 2010, albumCover: nil))
+        tracks = myTracks
         self.tableView.reloadData()
     }
 
