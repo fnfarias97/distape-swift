@@ -29,7 +29,7 @@ class TracksTableViewController: UITableViewController {
                                                name: NSNotification.Name("updateTable"),
                                                object: nil)
 
-        let _ = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { _ in // timer in
+        _ = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { _ in // timer in
             NotificationCenter.default.post(name: NSNotification.Name("updateTable"), object: nil)
         }
 

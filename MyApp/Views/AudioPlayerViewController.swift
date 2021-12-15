@@ -47,8 +47,9 @@ class AudioPlayerViewController: UIViewController {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerPosition),
                                          userInfo: nil, repeats: true)
             timePosition = mySound?.currentTime
+            mySound?.play()
+            isPlaying = !isPlaying
         }
-
         self.view.backgroundColor = UIColor(named: "Background")
         let songTitleLabel = addLabel(mySong?.title, fontSize: 30)
         let artistLabel = addLabel(mySong?.artist, fontSize: 20)
@@ -57,57 +58,37 @@ class AudioPlayerViewController: UIViewController {
         timeSlider = addSlider()
         timeSlider?.addTarget(self, action: #selector(timeHandler(_:)), for: .valueChanged)
         self.view.addSubview(timeLabel)
-        let myGif = UIImageView()
-        let myGifURL: String? = Bundle.main.path(forResource: "stegosaurus-studio", ofType: ".gif")
-        myGif.translatesAutoresizingMaskIntoConstraints = false
-        myGif.image = UIImage.animatedImage(withAnimatedGIFURL: URL(fileURLWithPath: myGifURL!))
-        self.view.addSubview(myGif)
-        mySound?.play()
-        isPlaying = !isPlaying
+        let myGif = addGif()
         let optionsMenuButton = addButton("...", fontSize: 40)
-
+        createMenu(optionsMenuButton)
         NSLayoutConstraint.activate([
-            myGif.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 20),
-            myGif.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            myGif.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            timeSlider!.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40),
-            timeSlider!.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            timeSlider!.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
-                                                    constant: -80),
+            myGif.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            myGif.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            myGif.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            timeSlider!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
+            timeSlider!.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            timeSlider!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -80),
             timeLabel.centerYAnchor.constraint(equalTo: timeSlider!.centerYAnchor),
             timeLabel.leadingAnchor.constraint(equalTo: timeSlider!.trailingAnchor, constant: 20),
             playButton.bottomAnchor.constraint(equalTo: timeSlider!.topAnchor, constant: -40),
-            playButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             songTitleLabel.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -20),
-            songTitleLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            songTitleLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            songTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            songTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             songTitleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             artistLabel.bottomAnchor.constraint(equalTo: songTitleLabel.topAnchor, constant: -10),
-            artistLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            artistLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            artistLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            artistLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             optionsMenuButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor, constant: -10),
-            optionsMenuButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -40)
+            optionsMenuButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
-
-        if #available(iOS 14.0, *) {
-            var menuElements = [UIMenuElement]()
-            let icon = UIImage(systemName: "music.note")
-            for option in MenuOptions.allCases {
-                menuElements.append(option.menuActions())
-            }
-            optionsMenuButton.showsMenuAsPrimaryAction = true
-            optionsMenuButton.menu = UIMenu(title: "Song Menu", image: icon,
-                                            identifier: nil, options: .displayInline, children: menuElements)
-        } else {
-            let interaction = UIContextMenuInteraction(delegate: self)
-            optionsMenuButton.addInteraction(interaction)
-        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         mySound = nil
         self.parentVC?.playButtonTouched(indexPath: [0, Int(mySong!.songId)! - 1])
     }
+
     @objc func soundHandler(_ sender: UIButton?) {
         switch sender?.titleLabel?.text {
         case "Play":
@@ -151,7 +132,7 @@ class AudioPlayerViewController: UIViewController {
         soundHandler(nil)
     }
 
-    private func addImage() -> UIImageView {
+    /* private func addImage() -> UIImageView {
         let imageView = UIImageView()
         imageView.autoresizingMask = .flexibleWidth
         imageView.translatesAutoresizingMaskIntoConstraints = true
@@ -159,5 +140,30 @@ class AudioPlayerViewController: UIViewController {
         imageView.image = UIImage(named: "Logo")
         self.view.addSubview(imageView)
         return imageView
+    } */
+
+    private func addGif() -> UIImageView {
+        let myGif = UIImageView()
+        let myGifURL: String? = Bundle.main.path(forResource: "stegosaurus-studio", ofType: ".gif")
+        myGif.translatesAutoresizingMaskIntoConstraints = false
+        myGif.image = UIImage.animatedImage(withAnimatedGIFURL: URL(fileURLWithPath: myGifURL!))
+        self.view.addSubview(myGif)
+        return myGif
+    }
+
+    private func createMenu(_ sender: UIButton) {
+        if #available(iOS 14.0, *) {
+            var menuElements = [UIMenuElement]()
+            let icon = UIImage(systemName: "music.note")
+            for option in MenuOptions.allCases {
+                menuElements.append(option.menuActions())
+            }
+            sender.showsMenuAsPrimaryAction = true
+            sender.menu = UIMenu(title: "Song Menu", image: icon,
+                                            identifier: nil, options: .displayInline, children: menuElements)
+        } else {
+            let interaction = UIContextMenuInteraction(delegate: self)
+            sender.addInteraction(interaction)
+        }
     }
 }
