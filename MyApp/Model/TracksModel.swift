@@ -20,7 +20,8 @@ struct Track: Codable, Hashable {
     var artist: String?
     var album: String?
     let songId: String
-    var genre: Genres?
+    // var genre: Genres?
+    var genre: String?
     var duration: Int?
     var year: Int?
     var albumCover: String?
@@ -35,9 +36,9 @@ struct Track: Codable, Hashable {
         case albumCover
     }
 
-    enum Genres: Int {
-        case rock, pop, trap, altrock, folk, cumbia, rkt, edm, trance, techno, punk, ska, metal, trash
-    }
+    /* enum Genres: Int {
+        case rock = 0, pop, trap, altrock, folk, cumbia, rkt, edm, trance, techno, punk, ska, metal, trash
+    } */
 }
 
 enum PlayerStates {

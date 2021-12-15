@@ -14,6 +14,7 @@
 		8C1052682729AFFF0016A144 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1052672729AFFF0016A144 /* RegisterViewController.swift */; };
 		8C4433712746E61600EA9761 /* AudioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 8C4433702746E61600EA9761 /* AudioPlayer */; };
 		8C4433742746F18C00EA9761 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4433732746F18C00EA9761 /* APIManager.swift */; };
+		8C6E3BDB276A1853005D4C7C /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8C6E3BD9276A1853005D4C7C /* Model.xcdatamodeld */; };
 		8C8C42A02765311D00FEA910 /* RestServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8C429F2765311D00FEA910 /* RestServiceManager.swift */; };
 		8C9132A527444AE300CA96F6 /* 07.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C91329927444ADD00CA96F6 /* 07.mp3 */; };
 		8C9132A627444AE300CA96F6 /* 09.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8C91329A27444ADD00CA96F6 /* 09.mp3 */; };
@@ -80,6 +81,7 @@
 		8C44336D2746E5CA00EA9761 /* AudioPlayerSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AudioPlayerSwift; path = ../AudioPlayerSwift; sourceTree = "<group>"; };
 		8C44336E2746E5E900EA9761 /* AudioPlayerSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AudioPlayerSwift; path = ../AudioPlayerSwift; sourceTree = "<group>"; };
 		8C4433732746F18C00EA9761 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		8C6E3BDA276A1853005D4C7C /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		8C8C429F2765311D00FEA910 /* RestServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestServiceManager.swift; sourceTree = "<group>"; };
 		8C91329927444ADD00CA96F6 /* 07.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 07.mp3; sourceTree = "<group>"; };
 		8C91329A27444ADD00CA96F6 /* 09.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 09.mp3; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 				8CBB0224275720A70023D314 /* Resources */,
 				8CBB0226275726A00023D314 /* ViewModels */,
 				8CBB0225275720E40023D314 /* Views */,
+				8C6E3BD9276A1853005D4C7C /* Model.xcdatamodeld */,
 			);
 			path = MyApp;
 			sourceTree = "<group>";
@@ -622,6 +625,7 @@
 				8C4433742746F18C00EA9761 /* APIManager.swift in Sources */,
 				8CF56A8F27344CE5000E1081 /* Protocols.swift in Sources */,
 				8CEB392D2722F8250092D35D /* LoginViewController.swift in Sources */,
+				8C6E3BDB276A1853005D4C7C /* Model.xcdatamodeld in Sources */,
 				8CBAAEF0272C1DBB00C9FF5F /* WelcomeViewController.swift in Sources */,
 				8CF56AB3273567CC000E1081 /* AudioPlayerViewController.swift in Sources */,
 				8C00BFE92762A132004E09D1 /* DownloadManager.swift in Sources */,
@@ -1025,6 +1029,19 @@
 			productName = AudioPlayer;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		8C6E3BD9276A1853005D4C7C /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				8C6E3BDA276A1853005D4C7C /* Model.xcdatamodel */,
+			);
+			currentVersion = 8C6E3BDA276A1853005D4C7C /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 8CEB391D2722F8250092D35D /* Project object */;
 }

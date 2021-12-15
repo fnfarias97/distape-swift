@@ -62,46 +62,10 @@ class RestServiceManager {
         }
 
     }
+}
 
-    /* func post<T: Decodable, U: Encodable>(responseType: T.Type,
-                                          method: HTTPMethod,
-                                          endpoint: String,
-                                          body: U?,
-                                          completionHandler: @escaping (_ status: Bool, _ data: T?) -> Void) {
-        // stop cache saving
-        Alamofire.Session.default.session.configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
-
-        do {
-            var request = URLRequest(url: URL(string: "\(self.baseURL)\(endpoint)")!)
-            request.httpMethod = method.rawValue
-            request.setValue("application/json", forHTTPHeaderField: "Accept")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-
-            let jsonData = try JSONEncoder().encode(body)
-            request.httpBody = jsonData
-
-            AF.request(request)
-                .validate(statusCode: 200..<300)
-                .responseData { response in
-                    switch response.result {
-                    case .success(let value):
-                        do {
-                            let data = try JSONDecoder().decode(T.self, from: value)
-                            completionHandler(true, data)
-                        } catch {
-                            print(error)
-                            completionHandler(false, nil)
-                        }
-                    case .failure(let error):
-                        print(error)
-                        completionHandler(false, nil)
-                    }
-                }
-        } catch {
-            print(error)
-            completionHandler(false, nil)
-        }
-
-    } */
+class Connectivity {
+    class func isConnectedToInternet() -> Bool {
+        return NetworkReachabilityManager()?.isReachable ?? false
+    }
 }

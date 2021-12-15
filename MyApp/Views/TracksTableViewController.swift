@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class TracksTableViewController: UITableViewController {
 
@@ -13,16 +14,94 @@ class TracksTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        RestServiceManager.shared.getInfo(responseType: TrackResponse.self,
-                                          method: .get, endpoint: "songs", body: "") { _, data in
-                   if let dataResponse = data {
-                       myTracks = dataResponse.songs ?? []
-                       self.tracks = myTracks
-                       self.tableView.reloadData()
-                   }
-               }
+
+        self.savedData()
+
         self.tableView.backgroundColor = .black
         self.tableView.register(TrackTableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+    }
+
+    func savedData() {
+            // Check if there's not internet connection
+        if !Connectivity.isConnectedToInternet() {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+            let context = appDelegate.managedObjectContext
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Track_")
+            request.returnsObjectsAsFaults = false
+
+            do {
+                let result = try context!.fetch(request)
+                myTracks = [Track]()
+
+                guard let resultData = result as? [NSManagedObject] else { return }
+                for data in resultData {
+                    let title = data.value(forKey: "title") as? String
+                    let artist = data.value(forKey: "artist") as? String
+                    let album = data.value(forKey: "album") as? String
+                    let genre = data.value(forKey: "genre") as? String
+                    let songId = data.value(forKey: "song_id") as? String
+
+                    let track = Track(title: title!, artist: artist, album: album,
+                                      songId: songId!, genre: genre!)
+                    myTracks.append(track)
+                }
+                self.tracks = myTracks
+            } catch {
+                print("Failed to obtain info from DB, \(error), \(error.localizedDescription)")
+            }
+
+        } else {
+            // only if there's internet
+            self.downloadTracks()
+        }
+    }
+
+    func downloadTracks() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.managedObjectContext
+
+        RestServiceManager.shared.getInfo(responseType: TrackResponse.self,
+                                          method: .get, endpoint: "songs", body: "") { _, data in
+           if let dataResponse = data {
+               myTracks = dataResponse.songs ?? []
+               self.tracks = myTracks
+
+               // Using CoreData
+               if let context = context {
+
+                   // Remove Content
+                   let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Track_")
+                   let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+                   do {
+                       try appDelegate.persistentStoreCoordinator?.execute(deleteRequest, with: context)
+                   } catch {
+                       print(error)
+                   }
+
+                   // Add Content
+                   for item in dataResponse.songs! {
+                       let trackEntity = NSEntityDescription.insertNewObject(forEntityName: "Track_", into: context)
+
+                       trackEntity.setValue(item.artist, forKey: "artist")
+                       trackEntity.setValue(item.genre, forKey: "genre")
+                       trackEntity.setValue(item.album, forKey: "album")
+                       trackEntity.setValue(item.songId, forKey: "song_id")
+                       trackEntity.setValue(item.title, forKey: "title")
+                       trackEntity.setValue(item.albumCover, forKey: "album_cover")
+                       trackEntity.setValue(item.year, forKey: "year")
+
+                       do {
+                           try context.save()
+                       } catch {
+                           print("Info wasn't saved. \(error), \(error.localizedDescription)")
+                       }
+                   }
+               }
+
+               self.tableView.reloadData()
+           }
+       }
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateTable(_:)),
@@ -32,14 +111,11 @@ class TracksTableViewController: UITableViewController {
         _ = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { _ in // timer in
             NotificationCenter.default.post(name: NSNotification.Name("updateTable"), object: nil)
         }
-
-        /* let DManager = DownloadManager.shared
-        DManager.startDownload(url: URL(string: "https://speed.hetzner.de/100MB.bin")!) */
     }
 
     @objc func updateTable(_ notification: Notification) {
         myTracks.append(Track(title: "asd", artist: "asd", album: "asd", songId: "25",
-                            genre: .ska, duration: 40, year: 2010, albumCover: nil))
+                            genre: "ska", duration: 40, year: 2010, albumCover: nil))
         tracks = myTracks
         self.tableView.reloadData()
     }
