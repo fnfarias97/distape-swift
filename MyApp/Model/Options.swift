@@ -46,7 +46,7 @@ class PlayerMenuButton: UIButton {
             self.addInteraction(interaction)
         }
     }
-    // cyclomatic_complexity: ignores_case_statements: true
+    // swiftlint:disable cyclomatic_complexity
     func menuActions(_ option: MenuOptions) -> UIAction {
         let mySong = self.parentVC?.mySong
 
@@ -94,6 +94,7 @@ class PlayerMenuButton: UIButton {
                                  actionClosure: {print(self)})
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 
     private func handleDownload(_ mySong: Track?, option: MenuOptions) {
         let alert = UIAlertController(title: "Download",
