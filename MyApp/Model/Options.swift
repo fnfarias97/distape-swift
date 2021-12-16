@@ -47,6 +47,7 @@ class PlayerMenuButton: UIButton {
         }
     }
     // swiftlint:disable cyclomatic_complexity
+    // swiftlint:disable function_body_length
     func menuActions(_ option: MenuOptions) -> UIAction {
         let mySong = self.parentVC?.mySong
 
@@ -94,6 +95,7 @@ class PlayerMenuButton: UIButton {
                                  actionClosure: {print(self)})
         }
     }
+    // swiftlint:enable function_body_length
     // swiftlint:enable cyclomatic_complexity
 
     private func handleDownload(_ mySong: Track?, option: MenuOptions) {

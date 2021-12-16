@@ -89,26 +89,39 @@ class AudioPlayerViewController: UIViewController {
         self.view.addSubview(optionsMenuButton ?? UIButton())
         // createMenu(optionsMenuButton)
         NSLayoutConstraint.activate([
-            myGif.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             myGif.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             myGif.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            timeSlider!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
             timeSlider!.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             timeSlider!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -80),
             timeLabel.centerYAnchor.constraint(equalTo: timeSlider!.centerYAnchor),
             timeLabel.leadingAnchor.constraint(equalTo: timeSlider!.trailingAnchor, constant: 20),
-            playButton.bottomAnchor.constraint(equalTo: timeSlider!.topAnchor, constant: -40),
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             songTitleLabel.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -20),
             songTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             songTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             songTitleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            artistLabel.bottomAnchor.constraint(equalTo: songTitleLabel.topAnchor, constant: -10),
+
             artistLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             artistLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             optionsMenuButton!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor, constant: -10),
             optionsMenuButton!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
+        let screenSize: CGRect = UIScreen.main.bounds
+        if screenSize.height < 600.0 {
+            NSLayoutConstraint.activate([
+                myGif.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+                timeSlider!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+                playButton.bottomAnchor.constraint(equalTo: timeSlider!.topAnchor, constant: -40),
+                artistLabel.bottomAnchor.constraint(equalTo: songTitleLabel.topAnchor, constant: -10)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                myGif.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+                timeSlider!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
+                playButton.bottomAnchor.constraint(equalTo: timeSlider!.topAnchor, constant: -60),
+                artistLabel.bottomAnchor.constraint(equalTo: songTitleLabel.topAnchor, constant: -40)
+            ])
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -170,20 +183,4 @@ class AudioPlayerViewController: UIViewController {
             print("asd")
         }
     }
-
-    /* private func createMenu(_ sender: UIButton) {
-        if #available(iOS 14.0, *) {
-            var menuElements = [UIMenuElement]()
-            let icon = UIImage(systemName: "music.note")
-            for option in MenuOptions.allCases {
-                menuElements.append(option.menuActions())
-            }
-            sender.showsMenuAsPrimaryAction = true
-            sender.menu = UIMenu(title: "Song Menu", image: icon,
-                                            identifier: nil, options: .displayInline, children: menuElements)
-        } else {
-            let interaction = UIContextMenuInteraction(delegate: self)
-            sender.addInteraction(interaction)
-        }
-    } */
 }
