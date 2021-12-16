@@ -42,14 +42,6 @@ class TrackTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    /* override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
-    } */
 
     func setParams(track: Track) {
         self.track = track
@@ -91,23 +83,6 @@ class TrackTableViewCell: UITableViewCell {
         ])
     }
 
-    /* @objc func buttonTouchedOnCell(myTableViewCell: UITableViewCell) {
-        // guard let tabBarController = self.window?.rootViewController as? UITabBarController else { return }
-        // print(tabBarController)
-        let mainVC = UIStoryboard(name: "Main", bundle: nil)
-        let audioPlayerVC = mainVC.instantiateViewController(
-            withIdentifier: "AudioPlayerVC") as? AudioPlayerViewController
-        print(audioPlayerVC)
-        audioPlayerVC?.modalPresentationStyle = .overCurrentContext
-        // self.window?.rootViewController?.present(audioPlayerVC!, animated: true, completion: nil)
-        // self.window?.rootViewController?.tabBarController?.present(audioPlayerVC!, animated: true, completion: nil)
-        // self.windowr.performSegue(withIdentifier: "toAudioPlayerVC", sender: tabBarController)
-        self.window?.rootViewController?.performSegue(withIdentifier: "toAudioPlayerVC",
-     sender: self.window?.rootViewController)
-
-        // self.inputViewController?.tabBarController?.present(audioPlayerVC!, animated: true, completion: nil)
-        print("gello")
-    }*/
     @objc func touchHandler(myTableViewCell: UITableViewCell) {
         _ = parent?.buttonTouchedOnCell(myTableViewCell: myTableViewCell)
         dummyPlayButton()
@@ -116,16 +91,13 @@ class TrackTableViewCell: UITableViewCell {
     func dummyPlayButton() {
         self.playButton.performTwoStateSelection()
     }
-
 }
 
 func addImage(imageName: String) -> UIImageView {
     let imageView = UIImageView()
-    // imageView.autoresizingMask = .flexibleWidth
     imageView.contentMode = .scaleAspectFit
     imageView.image = UIImage(named: imageName)
     imageView.translatesAutoresizingMaskIntoConstraints = false
-    // imageView.frame = CGRect(x: myX, y: myY, width: widthHeight, height: widthHeight)
     imageView.backgroundColor = .white
     return imageView
 }
@@ -135,10 +107,7 @@ func addLabel(myTitle: String?, fontSize: CGFloat) -> UILabel {
     myLabel.text = myTitle
     myLabel.font = UIFont.systemFont(ofSize: fontSize)
     myLabel.textColor = .white
-    // myLabel.autoresizingMask = .flexibleWidth
     myLabel.translatesAutoresizingMaskIntoConstraints = false
-    // myLabel.frame = CGRect(x: 60, y: myY, width: UIScreen.main.bounds.width - 150, height: 50)
-    // myLabel.textAlignment = .center
     return myLabel
 }
 
@@ -147,17 +116,36 @@ func addButton(myImageTitle: String) -> UIButton {
     let myImage = UIImage(named: myImageTitle)
     let tintedImage = myImage?.withRenderingMode(.alwaysTemplate)
     button.setImage(tintedImage, for: .normal)
-    // button.imageEdgeInsets = UIEdgeInsets(top: widthHeight/1.2, left: widthHeight/1.2,
-    //                                      bottom: widthHeight/1.2, right: widthHeight/1.2)
     button.backgroundColor = .white
-    // button.autoresizingMask = .flexibleWidth
     button.translatesAutoresizingMaskIntoConstraints = false
-    // button.frame=CGRect(x: myX, y: myY, width: widthHeight, height: widthHeight)
     button.layer.cornerRadius = button.frame.height / 2
-    // button.layer.borderWidth = 1
-    // button.layer.borderColor = UIColor.black.cgColor
     button.tintColor = .black
-    // button.frame.size = CGSize(width: widthHeight, height: widthHeight)
-
     return button
+}
+
+class HighlightButton: UIButton {
+    var icon: UIImage?
+    var secondIcon: UIImage?
+    var isPlaying: Bool = false
+
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        self.layer.cornerRadius = self.frame.width/2
+        self.clipsToBounds = true
+        self.backgroundColor = .clear
+        // self.tintColor = .green
+    }
+
+    func performTwoStateSelection() {
+        self.isPlaying = !isPlaying
+        self.setImage(!isPlaying ? icon : secondIcon, for: .normal)
+        self.setImage(!isPlaying ? icon : secondIcon, for: .highlighted)
+    }
+
+    func setImage(icon: UIImage?) {
+        guard let icon = icon else { return }
+        self.icon = icon
+        self.setImage(icon, for: .normal)
+        self.setImage(icon, for: .highlighted)
+    }
 }

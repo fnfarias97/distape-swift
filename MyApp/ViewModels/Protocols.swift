@@ -15,3 +15,9 @@ protocol ButtonOnCellDelegate: AnyObject {
 protocol PlayButtonDelegate: AnyObject {
     func playButtonTouched (indexPath: IndexPath)
 }
+
+protocol PlaylistTracks {
+    var items: [String] { get set }
+
+    mutating func removeByIndex(_ index: Int) -> Bool
+}

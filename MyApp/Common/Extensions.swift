@@ -54,35 +54,16 @@ extension UIViewController {
     }
 }
 
-extension UIViewController: UIContextMenuInteractionDelegate {
+extension AudioPlayerViewController: UIContextMenuInteractionDelegate {
     public func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
                                        // swiftlint:disable:next line_length
                                        configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-      var menuElements = [UIMenuElement]()
-      for option in MenuOptions.allCases {
-          menuElements.append(option.menuActions())
-      }
-      return UIContextMenuConfiguration(identifier: nil,
-                                        previewProvider: nil) { _ in
-                                        UIMenu(title: "Song Menu", children: menuElements)
-                                      }
-    }
-
-    /* func menuBuilder(menuTitle: String, senderButton: UIButton) -> Void {
-        if #available(iOS 14.0, *) {
-            var menuElements = [UIMenuElement]()
-            let icon = UIImage(systemName: "music.note")
-            for option in MenuOptions.allCases {
-                menuElements.append(option.menuActions())
-            }
-            senderButton.showsMenuAsPrimaryAction = true
-            senderButton.menu = UIMenu(title: "Song Menu", image: icon,
-                                            identifier: nil, options: .displayInline, children: menuElements)
-        } else {
-            let interaction = UIContextMenuInteraction(delegate: self)
-            senderButton.addInteraction(interaction)
+        return UIContextMenuConfiguration(identifier: nil,
+                                          previewProvider: nil) { _ in
+            UIMenu(title: self.optionsMenuButton?.title ?? "",
+                   children: self.optionsMenuButton?.elements ?? [UIMenuElement]())
         }
-    } */
+    }
 }
 
 extension UITextField {

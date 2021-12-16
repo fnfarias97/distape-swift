@@ -63,6 +63,7 @@ class AudioPlayerViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    var optionsMenuButton: PlayerMenuButton?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,8 +84,10 @@ class AudioPlayerViewController: UIViewController {
         timeSlider?.addTarget(self, action: #selector(timeHandler(_:)), for: .valueChanged)
         self.view.addSubview(timeLabel)
         let myGif = addGif()
-        let optionsMenuButton = addButton("...", fontSize: 40)
-        createMenu(optionsMenuButton)
+        // let optionsMenuButton = addButton("...", fontSize: 40)
+        optionsMenuButton = PlayerMenuButton(type: .system, parentVC: self)
+        self.view.addSubview(optionsMenuButton ?? UIButton())
+        // createMenu(optionsMenuButton)
         NSLayoutConstraint.activate([
             myGif.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             myGif.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -103,8 +106,8 @@ class AudioPlayerViewController: UIViewController {
             artistLabel.bottomAnchor.constraint(equalTo: songTitleLabel.topAnchor, constant: -10),
             artistLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             artistLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            optionsMenuButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor, constant: -10),
-            optionsMenuButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
+            optionsMenuButton!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor, constant: -10),
+            optionsMenuButton!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
     }
 
@@ -154,7 +157,21 @@ class AudioPlayerViewController: UIViewController {
         return myGif
     }
 
-    private func createMenu(_ sender: UIButton) {
+    func refreshMenu(option: MenuOptions?) {
+        if let option = option {
+            let rawValueFix = (optionsMenuButton?.elements.count)! - (MenuOptions.allCases.count-1 - option.rawValue)
+            print(rawValueFix)
+            optionsMenuButton?.elements.insert((optionsMenuButton?.menuActions(option))!, at: rawValueFix)
+        }
+        let newElements: [UIMenuElement]? = optionsMenuButton?.elements
+        if #available(iOS 14.0, *) {
+            optionsMenuButton?.menu = optionsMenuButton?.menu?.replacingChildren(newElements ?? [UIMenuElement]())
+        } else {
+            print("asd")
+        }
+    }
+
+    /* private func createMenu(_ sender: UIButton) {
         if #available(iOS 14.0, *) {
             var menuElements = [UIMenuElement]()
             let icon = UIImage(systemName: "music.note")
@@ -168,5 +185,5 @@ class AudioPlayerViewController: UIViewController {
             let interaction = UIContextMenuInteraction(delegate: self)
             sender.addInteraction(interaction)
         }
-    }
+    } */
 }

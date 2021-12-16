@@ -3,3 +3,4 @@ included:
 
 excluded:
   - Pods
+  - ignores_case_statements
