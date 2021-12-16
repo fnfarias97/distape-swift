@@ -19,6 +19,23 @@ class TracksTableViewController: UITableViewController {
 
         self.tableView.backgroundColor = .black
         self.tableView.register(TrackTableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl?.tintColor = .white
+        self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+    }
+
+    @objc func refresh(_ sender: AnyObject) {
+       // Code to refresh table view
+
+        if Connectivity.isConnectedToInternet() {
+            print("Refreshing Data")
+            DispatchQueue.main.async {
+                self.downloadTracks()
+                self.refreshControl?.endRefreshing()
+            }
+        }
     }
 
     func savedData() {

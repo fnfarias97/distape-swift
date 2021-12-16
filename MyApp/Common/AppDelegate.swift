@@ -17,15 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        /* let api = APIManager()
-        api.getMusic(completion: { (_, error) in
-            if error == nil {
-                print("tracklist fetch complete")
-            } else {
-                print(error!)
-            }
-        }) */
         print("Documents Directory: ", FileManager.default.urls(for: .documentDirectory,
                                                                    in: .userDomainMask).last ?? "Not Found")
 
