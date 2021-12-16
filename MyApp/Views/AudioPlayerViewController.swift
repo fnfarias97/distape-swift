@@ -11,7 +11,24 @@ import AudioPlayer
 
 class AudioPlayerViewController: UIViewController {
 
-    var isPlaying: Bool = false
+    var isPlaying: Bool = false {
+        didSet {
+            if isPlaying {
+                print("Playing")
+                mySound?.play()
+                playButton.setTitle("Stop", for: .normal)
+                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerPosition),
+                                             userInfo: nil, repeats: true)
+            } else {
+                print("Not Playing")
+                mySound?.stop()
+                playButton.setTitle("Play", for: .normal)
+                timer?.invalidate()
+                timer = nil
+            }
+        }
+    }
+
     var mySoundURL: String?
     var mySound: AudioPlayer?
     var mySong: Track?
@@ -29,6 +46,7 @@ class AudioPlayerViewController: UIViewController {
         }
 
     }
+
     var timeLabel: UILabel = {
         let title = UILabel()
         title.font = UIFont.systemFont(ofSize: 15)
@@ -36,6 +54,14 @@ class AudioPlayerViewController: UIViewController {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textAlignment = .center
         return title
+    }()
+    var playButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Stop", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.autoresizingMask = .flexibleWidth
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
 
     override func viewDidLoad() {
@@ -46,14 +72,12 @@ class AudioPlayerViewController: UIViewController {
             mySound = try? AudioPlayer(fileName: mySoundURL!)
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerPosition),
                                          userInfo: nil, repeats: true)
-            timePosition = mySound?.currentTime
-            mySound?.play()
             isPlaying = !isPlaying
         }
         self.view.backgroundColor = UIColor(named: "Background")
         let songTitleLabel = addLabel(mySong?.title, fontSize: 30)
         let artistLabel = addLabel(mySong?.artist, fontSize: 20)
-        let playButton = addButton("Stop")
+        self.view.addSubview(playButton)
         playButton.addTarget(self, action: #selector(soundHandler(_:)), for: .touchUpInside)
         timeSlider = addSlider()
         timeSlider?.addTarget(self, action: #selector(timeHandler(_:)), for: .valueChanged)
@@ -90,28 +114,7 @@ class AudioPlayerViewController: UIViewController {
     }
 
     @objc func soundHandler(_ sender: UIButton?) {
-        switch sender?.titleLabel?.text {
-        case "Play":
-            guard !isPlaying else {return}
-            mySound?.play()
-            sender?.setTitle("Stop", for: .normal)
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerPosition),
-                                         userInfo: nil, repeats: true)
-        case "Stop":
-            guard isPlaying else {return}
-            mySound?.stop()
-            sender?.setTitle("Play", for: .normal)
-            timer?.invalidate()
-            timer = nil
-        default:
-            if isPlaying {
-                mySound?.stop()
-            } else {
-                mySound?.play()
-            }
-        }
         isPlaying = !isPlaying
-        isPlaying ? print("Playing") : print("Not Playing")
     }
 
     @objc func volumeHandler(_ sender: UISlider) {
@@ -132,7 +135,7 @@ class AudioPlayerViewController: UIViewController {
         soundHandler(nil)
     }
 
-    /* private func addImage() -> UIImageView {
+    private func addImage() -> UIImageView {
         let imageView = UIImageView()
         imageView.autoresizingMask = .flexibleWidth
         imageView.translatesAutoresizingMaskIntoConstraints = true
@@ -140,7 +143,7 @@ class AudioPlayerViewController: UIViewController {
         imageView.image = UIImage(named: "Logo")
         self.view.addSubview(imageView)
         return imageView
-    } */
+    }
 
     private func addGif() -> UIImageView {
         let myGif = UIImageView()

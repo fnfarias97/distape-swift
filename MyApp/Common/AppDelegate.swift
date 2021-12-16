@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - COREDATA STUFF
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Model")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores(completionHandler: { (_, error) in // (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Fatal error \(error), \(error.userInfo)")
             }

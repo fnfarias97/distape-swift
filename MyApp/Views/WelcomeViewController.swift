@@ -31,8 +31,8 @@ class WelcomeViewController: UIViewController {
         self.imageLogo.isUserInteractionEnabled = true
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         self.imageLogo.addGestureRecognizer(pinch)
-        // let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-        // self.imageLogo.addGestureRecognizer(tap)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        self.imageLogo.addGestureRecognizer(tap)
 
     }
 
@@ -48,7 +48,6 @@ class WelcomeViewController: UIViewController {
     }
 
     @objc func handlePinch(_ sender: UIPinchGestureRecognizer) {
-        print("hola")
         if let scale = (sender.view?.transform.scaledBy(x: sender.scale, y: sender.scale)) {
                    guard scale.a > 1.0 else { return }
                    guard scale.d > 1.0 else { return }
