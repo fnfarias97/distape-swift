@@ -131,8 +131,8 @@ class TracksTableViewController: UITableViewController {
     }
 
     @objc func updateTable(_ notification: Notification) {
-        myTracks.append(Track(title: "asd", artist: "asd", album: "asd", songId: "25",
-                            genre: "ska", duration: 40, year: 2010, albumCover: nil))
+        myTracks.append(Track(title: "Unknown", artist: "Unknown Artist", album: "Unknown Album",
+                              songId: "\(myTracks.count)", genre: "ska", duration: 40, year: 2010, albumCover: nil))
         tracks = myTracks
         self.tableView.reloadData()
     }
