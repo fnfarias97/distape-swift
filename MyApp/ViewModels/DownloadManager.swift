@@ -25,7 +25,7 @@ class DownloadManager: NSObject, ObservableObject {
     }
 
     func startDownload(url: URL) {
-        print("hi")
+        print("Downloading")
         let task = urlSession.downloadTask(with: url)
         task.resume()
         tasks.append(task)

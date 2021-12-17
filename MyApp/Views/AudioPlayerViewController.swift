@@ -208,7 +208,8 @@ class AudioPlayerViewController: UIViewController {
         if #available(iOS 14.0, *) {
             optionsMenuButton?.menu = optionsMenuButton?.menu?.replacingChildren(newElements ?? [UIMenuElement]())
         } else {
-            print("asd")
+            // Add workaround for ios 13
+            print("")
         }
     }
 }

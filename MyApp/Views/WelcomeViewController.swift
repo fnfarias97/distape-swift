@@ -22,7 +22,6 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageLogo.image = UIImage(named: "Logo")
-        // imagenes del sistema: UIImage(systemName: "person.fill")
         // Do any additional setup after loading the view.
         gesturesManager()
     }
@@ -49,8 +48,10 @@ class WelcomeViewController: UIViewController {
 
     @objc func handlePinch(_ sender: UIPinchGestureRecognizer) {
         if let scale = (sender.view?.transform.scaledBy(x: sender.scale, y: sender.scale)) {
-                   guard scale.a > 1.0 else { return }
-                   guard scale.d > 1.0 else { return }
+                   guard scale.a > 1.0,
+                         scale.d > 1.0,
+                         scale.a < 3.0,
+                         scale.d < 3.0 else { return }
                     sender.view?.transform = scale
                    sender.scale = 1
         }
