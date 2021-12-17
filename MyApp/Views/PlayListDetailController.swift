@@ -61,6 +61,7 @@ class PlayListDetailController: UIViewController, UITableViewDelegate {
         addButton.addTarget(self, action: #selector(showView), for: .touchUpInside)
 
         self.view.addSubview(myTV)
+        myTV.layer.cornerRadius = 5
         NSLayoutConstraint.activate([
             myTV.topAnchor.constraint(equalTo: titleTF.bottomAnchor, constant: 20),
             myTV.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -77,6 +78,8 @@ class PlayListDetailController: UIViewController, UITableViewDelegate {
                                                   width: self.view.frame.width, height: self.view.frame.height/2))
         trv.delegate = self
         self.view.addSubview(trv)
+        trv.layer.masksToBounds = true
+        trv.layer.cornerRadius = 10
     }
 
     /* override func viewDidLayoutSubviews() {
@@ -96,6 +99,19 @@ extension PlayListDetailController: UITableViewDataSource {
         let track = trackList[indexPath.row]
         cell.textLabel?.text = track.title
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tracks.remove(trackList[indexPath.row])
+            trackList = Array(tracks)
+            myTV.reloadData()
+        }
     }
 }
 

@@ -41,37 +41,37 @@ class TracksPickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     var pickerView: UIPickerView = UIPickerView()
 
     override func draw(_ rect: CGRect) {
-            let dimension = 35
+        let dimension = 35
 
-            removeView.frame = CGRect(x: 3, y: 3, width: dimension, height: dimension)
-            self.addSubview(removeView)
-            removeView.addTarget(self, action: #selector(close), for: .touchUpInside)
+        removeView.frame = CGRect(x: 3, y: 3, width: dimension, height: dimension)
+        self.addSubview(removeView)
+        removeView.addTarget(self, action: #selector(close), for: .touchUpInside)
 
-            addSong.frame = CGRect(x: Int(rect.width) - (dimension + 3), y: 3, width: dimension, height: dimension)
-            self.addSubview(addSong)
-            addSong.addTarget(self, action: #selector(add), for: .touchUpInside)
+        addSong.frame = CGRect(x: Int(rect.width) - (dimension + 3), y: 3, width: dimension, height: dimension)
+        self.addSubview(addSong)
+        addSong.addTarget(self, action: #selector(add), for: .touchUpInside)
 
-            pickerView.frame = CGRect(x: 0, y: 30, width: rect.width, height: rect.height-30)
-            pickerView.delegate = self
-            pickerView.dataSource = self
-            self.addSubview(pickerView)
+        pickerView.frame = CGRect(x: 0, y: 30, width: rect.width, height: rect.height-30)
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        self.addSubview(pickerView)
+    }
+
+    @objc func close () {
+        self.removeFromSuperview()
+    }
+
+    @objc func add () {
+        if delegate != nil {
+            let index = pickerView.selectedRow(inComponent: 0)
+            let track = myTracks[index]
+            delegate?.addTrack(myTrack: track)
         }
+    }
 
-        @objc func close () {
-            self.removeFromSuperview()
-        }
-
-        @objc func add () {
-            if delegate != nil {
-                let index = pickerView.selectedRow(inComponent: 0)
-                let track = myTracks[index]
-                delegate?.addTrack(myTrack: track)
-            }
-        }
-
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            self.backgroundColor = .lightGray
-          }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.backgroundColor = .lightGray.withAlphaComponent(0.9)
+      }
 
 }
