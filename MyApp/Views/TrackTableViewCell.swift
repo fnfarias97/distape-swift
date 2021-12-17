@@ -28,6 +28,9 @@ class TrackTableViewCell: UITableViewCell {
         button.setImage(tintedImage, for: .normal)
         button.icon = myIcon
         button.secondIcon = mySecIcon
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.imageEdgeInsets = UIEdgeInsets(top: -1, left: -1, bottom: -1, right: -1)
         button.backgroundColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = button.frame.height / 2

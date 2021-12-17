@@ -13,16 +13,17 @@ class AudioPlayerViewController: UIViewController {
 
     var isPlaying: Bool = false {
         didSet {
+            playButton.performTwoStateSelection()
             if isPlaying {
                 print("Playing")
                 mySound?.play()
-                playButton.setTitle("Stop", for: .normal)
+                // playButton.setTitle("Stop", for: .normal)
                 timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerPosition),
                                              userInfo: nil, repeats: true)
             } else {
                 print("Not Playing")
                 mySound?.stop()
-                playButton.setTitle("Play", for: .normal)
+                // playButton.setTitle("Play", for: .normal)
                 timer?.invalidate()
                 timer = nil
             }
@@ -55,16 +56,42 @@ class AudioPlayerViewController: UIViewController {
         title.textAlignment = .center
         return title
     }()
-    var playButton: UIButton = {
+    /* var playButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Stop", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.autoresizingMask = .flexibleWidth
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }() */
+    var playButton: HighlightButton = {
+        let button = HighlightButton(type: .system)
+        let myIcon = UIImage(named: "play_circle")
+        let mySecIcon = UIImage(named: "pause_circle")
+        button.setImage(mySecIcon, for: .normal)
+        button.icon = myIcon
+        button.secondIcon = mySecIcon
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.imageEdgeInsets = UIEdgeInsets(top: -5, left: -5, bottom: -5, right: -5)
+        button.backgroundColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = button.frame.height / 2
+        button.tintColor = .black
+        let widthContraints =  NSLayoutConstraint(item: button, attribute: NSLayoutConstraint.Attribute.width,
+                                                  relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil,
+                                                  attribute: NSLayoutConstraint.Attribute.notAnAttribute,
+                                                  multiplier: 1, constant: 50)
+        let heightContraints = NSLayoutConstraint(item: button, attribute: NSLayoutConstraint.Attribute.height,
+                                                  relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil,
+                                                  attribute: NSLayoutConstraint.Attribute.notAnAttribute,
+                                                  multiplier: 1, constant: 50)
+        NSLayoutConstraint.activate([heightContraints, widthContraints])
+        return button
     }()
     var optionsMenuButton: PlayerMenuButton?
 
+    // swiftlint:disable function_body_length
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let mySongID = mySong?.songId else { return }
@@ -84,10 +111,10 @@ class AudioPlayerViewController: UIViewController {
         timeSlider?.addTarget(self, action: #selector(timeHandler(_:)), for: .valueChanged)
         self.view.addSubview(timeLabel)
         let myGif = addGif()
-        // let optionsMenuButton = addButton("...", fontSize: 40)
+
         optionsMenuButton = PlayerMenuButton(type: .system, parentVC: self)
         self.view.addSubview(optionsMenuButton ?? UIButton())
-        // createMenu(optionsMenuButton)
+
         NSLayoutConstraint.activate([
             myGif.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             myGif.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -100,12 +127,12 @@ class AudioPlayerViewController: UIViewController {
             songTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             songTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             songTitleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-
             artistLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             artistLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             optionsMenuButton!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor, constant: -10),
             optionsMenuButton!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
+
         let screenSize: CGRect = UIScreen.main.bounds
         if screenSize.height < 600.0 {
             NSLayoutConstraint.activate([
@@ -123,6 +150,7 @@ class AudioPlayerViewController: UIViewController {
             ])
         }
     }
+    // swiftlint:enable function_body_length
 
     override func viewDidDisappear(_ animated: Bool) {
         mySound = nil
